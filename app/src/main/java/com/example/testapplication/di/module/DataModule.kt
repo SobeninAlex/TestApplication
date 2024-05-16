@@ -39,7 +39,7 @@ interface DataModule {
                 .build()
 
         @[ApplicationScope Provides]
-        fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String) =
+        fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String): Retrofit =
             Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
