@@ -76,6 +76,15 @@ dependencies {
     //material-icons-extended
     implementation(libs.material.icons.extended)
 
+    //lottie
+    implementation ("com.airbnb.android:lottie-compose:6.4.0")
+
+    //splash
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //jetpack compose navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
