@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
         (applicationContext as CustomTextApp).applicationComponent
     }
 
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
 
