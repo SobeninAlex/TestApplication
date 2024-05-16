@@ -9,10 +9,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("test/?limit=10")
-    fun loadQuotes(
+    @GET("test")
+    suspend fun loadQuotes(
+        @Query("limit") limit: Int = 10,
         @Query("offset") offset: Int = 1
-    ): Flow<List<QuoteDto>>
+    ): List<QuoteDto>
 
     @GET("test/{id}")
     suspend fun loadQuoteDetail(

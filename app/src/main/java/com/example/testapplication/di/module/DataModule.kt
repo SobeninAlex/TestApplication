@@ -1,5 +1,6 @@
 package com.example.testapplication.di.module
 
+import com.example.testapplication.data.network.api.ApiFactory
 import com.example.testapplication.data.network.api.ApiService
 import com.example.testapplication.data.repository.DetailQuoteRepositoryImpl
 import com.example.testapplication.data.repository.ListQuoteRepositoryImpl
@@ -27,27 +28,10 @@ interface DataModule {
 
     companion object {
 
-        @Provides
-        fun provideBaseUrl() = BASE_URL
-
-        @Provides
-        fun provideOkHttpClient() =
-            OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                })
-                .build()
-
         @[ApplicationScope Provides]
-        fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String): Retrofit =
-            Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build()
-
-        @[ApplicationScope Provides]
-        fun provideApiService(retrofit: Retrofit) = retrofit.create<ApiService>()
+        fun provideApiService(): ApiService {
+            return ApiFactory.apiService
+        }
 
     }
 

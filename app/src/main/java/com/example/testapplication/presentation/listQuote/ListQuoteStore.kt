@@ -1,5 +1,6 @@
 package com.example.testapplication.presentation.listQuote
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -80,10 +81,10 @@ class ListQuoteStoreFactory @Inject constructor(
             scope.launch {
                 dispatch(Action.StartLoading)
                 try {
-                    getAllQuotesUseCase().collect {
-                        dispatch(Action.LoadingSuccess(quotes = it))
-                    }
+                    val list = getAllQuotesUseCase()
+                    dispatch(Action.LoadingSuccess(quotes = list))
                 } catch (e: Exception) {
+                    Log.d("ListQuoteStore", e.stackTraceToString())
                     dispatch(Action.LoadingError)
                 }
             }

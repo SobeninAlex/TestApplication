@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ListQuoteRepository {
 
-    fun getQuotes(offset: Int = 1): Flow<List<Quote>>
+    suspend fun getQuotes(offset: Int = 1): List<Quote>
 
 }
