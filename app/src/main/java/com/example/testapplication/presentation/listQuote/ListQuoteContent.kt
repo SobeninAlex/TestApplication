@@ -115,9 +115,9 @@ private fun Content(
                         quote = quote,
                         alignment = Alignment.CenterStart,
                         roundedCornerShape = RoundedCornerShape(
-                            topStart = 8.dp,
-                            topEnd = 8.dp,
-                            bottomEnd = 8.dp
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                            bottomEnd = 12.dp
                         ),
                         onClickItem = {
                             onClickItem(quote.id)
@@ -130,9 +130,9 @@ private fun Content(
                         quote = quote,
                         alignment = Alignment.CenterEnd,
                         roundedCornerShape = RoundedCornerShape(
-                            topStart = 8.dp,
-                            topEnd = 8.dp,
-                            bottomStart = 8.dp
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                            bottomStart = 12.dp
                         ),
                         onClickItem = {
                             onClickItem(quote.id)
