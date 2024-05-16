@@ -40,6 +40,10 @@ class DefaultListQuoteComponent @AssistedInject constructor(
         store.accept(ListQuoteStore.Intent.QuoteItemClicked(quoteId))
     }
 
+    override fun loadNextBatch() {
+        store.accept(ListQuoteStore.Intent.LoadNextBatch)
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(

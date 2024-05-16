@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -61,12 +64,18 @@ fun ListQuoteContent(
                     paddingValues = paddingValues,
                     onClickItem = {
                         component.onClickQuoteItem(it)
+                    },
+                    nextBatchLoad = {
+                        component.loadNextBatch()
                     }
                 )
             }
 
             is ListQuoteStore.State.ListQuoteState.StartLoading -> {
-                Loader(paddingValues = paddingValues)
+                Loader(
+                    paddingValues = paddingValues,
+                    alignment = Alignment.Center
+                )
             }
         }
 
@@ -80,6 +89,7 @@ private fun Content(
     listQuote: List<Quote>,
     paddingValues: PaddingValues = PaddingValues(),
     onClickItem: (Int) -> Unit,
+    nextBatchLoad: () -> Unit
 ) {
 
     LazyColumn(
@@ -89,10 +99,14 @@ private fun Content(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(
+
+        itemsIndexed(
             items = listQuote,
-            key = { it.id }
-        ) { quote ->
+            key = { _, item ->
+                item.id
+            }
+        ) { index, quote ->
+
             when (quote.createdBy) {
                 0 -> {
                     QuoteItem(
@@ -127,6 +141,13 @@ private fun Content(
                 else -> {
                     throw RuntimeException("unknown item")
                 }
+            }
+
+            if (index == listQuote.size - 1) {
+                Loader(
+                    alignment = Alignment.BottomCenter
+                )
+                nextBatchLoad()
             }
         }
     }

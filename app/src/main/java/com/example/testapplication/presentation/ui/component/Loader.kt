@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun Loader(
     modifier: Modifier = Modifier,
-    paddingValues: PaddingValues = PaddingValues()
+    paddingValues: PaddingValues = PaddingValues(),
+    alignment: Alignment,
 ) {
     Box(modifier = modifier
         .fillMaxSize()
@@ -21,7 +22,7 @@ fun Loader(
     {
         CircularProgressIndicator(
             modifier = modifier
-                .align(Alignment.Center),
+                .align(alignment),
             color = MaterialTheme.colorScheme.onBackground
         )
     }

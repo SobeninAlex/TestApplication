@@ -19,6 +19,8 @@ interface ListQuoteStore : Store<Intent, State, Label> {
     sealed interface Intent {
         //действия, которые может совершить пользователь
         data class QuoteItemClicked(val quoteId: Int) : Intent
+
+        data object LoadNextBatch : Intent
     }
 
     data class State(
@@ -46,6 +48,9 @@ class ListQuoteStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val getAllQuotesUseCase: GetAllQuotesUseCase,
 ) {
+
+    private var offset = 1
+    private val limit = 10
 
     fun create(): ListQuoteStore =
         object : ListQuoteStore, Store<Intent, State, Label> by storeFactory.create(
@@ -81,8 +86,9 @@ class ListQuoteStoreFactory @Inject constructor(
             scope.launch {
                 dispatch(Action.StartLoading)
                 try {
-                    val list = getAllQuotesUseCase()
+                    val list = getAllQuotesUseCase(offset = offset)
                     dispatch(Action.LoadingSuccess(quotes = list))
+                    offset += limit
                 } catch (e: Exception) {
                     Log.d("ListQuoteStore", e.stackTraceToString())
                     dispatch(Action.LoadingError)
@@ -96,6 +102,19 @@ class ListQuoteStoreFactory @Inject constructor(
             when (intent) {
                 is Intent.QuoteItemClicked -> {
                     publish(Label.QuoteItemClicked(quoteId = intent.quoteId))
+                }
+
+                is Intent.LoadNextBatch -> {
+                    scope.launch {
+                        try {
+                            val list = getAllQuotesUseCase(offset = offset)
+                            dispatch(Msg.LoadingSuccess(quotes = list))
+                            offset += limit
+                        } catch (e: Exception) {
+                            Log.d("ListQuoteStore", e.stackTraceToString())
+                            dispatch(Msg.LoadingError)
+                        }
+                    }
                 }
             }
         }

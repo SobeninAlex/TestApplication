@@ -10,4 +10,6 @@ interface ListQuoteComponent {
     //действия пользователя
     fun onClickQuoteItem(quoteId: Int)
 
+    fun loadNextBatch()
+
 }
