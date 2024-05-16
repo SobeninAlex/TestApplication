@@ -20,15 +20,9 @@ class ListQuoteRepositoryImpl @Inject constructor(
 
     private val _quotes = mutableListOf<Quote>()
 
-    private val _loadNext = MutableStateFlow(true)
-    override val loadNext get() = _loadNext.asStateFlow()
-
     override suspend fun getQuotes(offset: Int): List<Quote> {
         val result = apiService.loadQuotes(offset = offset).toListEntity()
         Log.d("ListQuoteRepositoryImpl", result.toString())
-        if (result.size < 10) {
-            _loadNext.value = false
-        }
         _quotes.addAll(result)
         return _quotes.toList()
     }

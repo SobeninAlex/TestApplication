@@ -8,6 +8,4 @@ interface ListQuoteRepository {
 
     suspend fun getQuotes(offset: Int = 1): List<Quote>
 
-    val loadNext : StateFlow<Boolean>
-
 }
