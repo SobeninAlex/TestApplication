@@ -24,6 +24,7 @@ interface ListQuoteStore : Store<Intent, State, Label> {
     }
 
     data class State(
+        val isLoadingMore: Boolean,
         val listQuoteState: ListQuoteState
     ) {
         sealed interface ListQuoteState {
@@ -49,6 +50,7 @@ class ListQuoteStoreFactory @Inject constructor(
     private val getAllQuotesUseCase: GetAllQuotesUseCase,
 ) {
 
+    private val _listQuotes = mutableListOf<Quote>()
     private var offset = 1
     private val limit = 10
 
@@ -56,6 +58,7 @@ class ListQuoteStoreFactory @Inject constructor(
         object : ListQuoteStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ListQuoteStore",
             initialState = State(
+                isLoadingMore = true,
                 listQuoteState = State.ListQuoteState.Initial
             ),
             bootstrapper = BootstrapperImpl(),
@@ -69,7 +72,7 @@ class ListQuoteStoreFactory @Inject constructor(
 
         data object LoadingError : Action
 
-        data class LoadingSuccess(val quotes: List<Quote>) : Action
+        data class LoadingSuccess(val isLoadingMore: Boolean, val quotes: List<Quote>) : Action
     }
 
     private sealed interface Msg {
@@ -78,7 +81,7 @@ class ListQuoteStoreFactory @Inject constructor(
 
         data object LoadingError : Msg
 
-        data class LoadingSuccess(val quotes: List<Quote>) : Msg
+        data class LoadingSuccess(val isLoadingMore: Boolean, val quotes: List<Quote>) : Msg
     }
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
@@ -86,9 +89,12 @@ class ListQuoteStoreFactory @Inject constructor(
             scope.launch {
                 dispatch(Action.StartLoading)
                 try {
-                    val list = getAllQuotesUseCase(offset = offset)
-                    dispatch(Action.LoadingSuccess(quotes = list))
-                    offset += limit
+                    getAllQuotesUseCase(offset = offset).collect {
+                        _listQuotes.addAll(it)
+                        val isLoadingMore = it.size == 10
+                        dispatch(Action.LoadingSuccess(quotes = _listQuotes.toList(), isLoadingMore = isLoadingMore))
+                        offset += limit
+                    }
                 } catch (e: Exception) {
                     Log.d("ListQuoteStore", e.stackTraceToString())
                     dispatch(Action.LoadingError)
@@ -107,9 +113,12 @@ class ListQuoteStoreFactory @Inject constructor(
                 is Intent.LoadNextBatch -> {
                     scope.launch {
                         try {
-                            val list = getAllQuotesUseCase(offset = offset)
-                            dispatch(Msg.LoadingSuccess(quotes = list))
-                            offset += limit
+                            getAllQuotesUseCase(offset = offset).collect {
+                                _listQuotes.addAll(it)
+                                val isLoadingMore = it.size == 10
+                                dispatch(Msg.LoadingSuccess(quotes = _listQuotes.toList(), isLoadingMore = isLoadingMore))
+                                offset += limit
+                            }
                         } catch (e: Exception) {
                             Log.d("ListQuoteStore", e.stackTraceToString())
                             dispatch(Msg.LoadingError)
@@ -126,7 +135,7 @@ class ListQuoteStoreFactory @Inject constructor(
                 }
 
                 is Action.LoadingSuccess -> {
-                    dispatch(Msg.LoadingSuccess(action.quotes))
+                    dispatch(Msg.LoadingSuccess(quotes = action.quotes, isLoadingMore = action.isLoadingMore))
                 }
 
                 is Action.StartLoading -> {
@@ -146,6 +155,7 @@ class ListQuoteStoreFactory @Inject constructor(
 
             is Msg.LoadingSuccess -> {
                 copy(
+                    isLoadingMore = msg.isLoadingMore,
                     listQuoteState = State.ListQuoteState.LoadingSuccess(msg.quotes)
                 )
             }

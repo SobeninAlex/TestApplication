@@ -67,7 +67,8 @@ fun ListQuoteContent(
                     },
                     nextBatchLoad = {
                         component.loadNextBatch()
-                    }
+                    },
+                    isLoadingMore = state.isLoadingMore
                 )
             }
 
@@ -89,7 +90,8 @@ private fun Content(
     listQuote: List<Quote>,
     paddingValues: PaddingValues = PaddingValues(),
     onClickItem: (Int) -> Unit,
-    nextBatchLoad: () -> Unit
+    nextBatchLoad: () -> Unit,
+    isLoadingMore: Boolean,
 ) {
 
     LazyColumn(
@@ -143,7 +145,7 @@ private fun Content(
                 }
             }
 
-            if (index == listQuote.size - 1) {
+            if (index == listQuote.size - 1 && isLoadingMore) {
                 Loader(
                     alignment = Alignment.BottomCenter
                 )

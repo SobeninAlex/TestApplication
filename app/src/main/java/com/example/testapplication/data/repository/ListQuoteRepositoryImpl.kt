@@ -1,16 +1,20 @@
 package com.example.testapplication.data.repository
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.example.testapplication.data.mapper.toEntity
 import com.example.testapplication.data.mapper.toListEntity
 import com.example.testapplication.data.network.api.ApiService
 import com.example.testapplication.domain.entity.Quote
+import com.example.testapplication.domain.entity.QuoteState
 import com.example.testapplication.domain.repository.ListQuoteRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,13 +22,17 @@ class ListQuoteRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : ListQuoteRepository {
 
-    private val _quotes = mutableListOf<Quote>()
+//    private val _listQuotes = mutableListOf<Quote>()
+//    private val listQuotes get() = _listQuotes.toList()
 
-    override suspend fun getQuotes(offset: Int): List<Quote> {
+    override fun getQuotes(offset: Int): Flow<List<Quote>> = flow {
         val result = apiService.loadQuotes(offset = offset).toListEntity()
-        Log.d("ListQuoteRepositoryImpl", result.toString())
-        _quotes.addAll(result)
-        return _quotes.toList()
+        if (result.isNotEmpty()) {
+            emit(result)
+        }
+//        val isLoadingMore = result.size == 10
+//        _listQuotes.addAll(result)
+//        val quoteState = QuoteState(isLoadingMore = isLoadingMore, quotes = listQuotes)
     }
 
 }

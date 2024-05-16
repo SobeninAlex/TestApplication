@@ -7,6 +7,6 @@ class GetAllQuotesUseCase @Inject constructor(
     private val repository: ListQuoteRepository
 ) {
 
-    suspend operator fun invoke(offset: Int = 1) = repository.getQuotes(offset = offset)
+    operator fun invoke(offset: Int = 1) = repository.getQuotes(offset = offset)
 
 }
