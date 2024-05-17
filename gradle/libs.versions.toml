@@ -16,6 +16,8 @@ daggerVersion = "2.49"
 retrofitVersion = "2.11.0"
 okhttpVersion = "4.12.0"
 parcelizeVersion = "1.9.22"
+appcompat = "1.6.1"
+material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +57,8 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 
 #material-icons-extended
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 
 [plugins]
@@ -62,4 +66,5 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelizeVersion" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

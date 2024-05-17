@@ -53,6 +53,9 @@ android {
 
 dependencies {
 
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
     //mvikotlin
     implementation(libs.mvikotlin)
     implementation(libs.mvikotlin.main)

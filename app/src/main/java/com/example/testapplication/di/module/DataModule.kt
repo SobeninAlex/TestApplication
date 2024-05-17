@@ -19,10 +19,10 @@ import retrofit2.create
 interface DataModule {
 
     @[ApplicationScope Binds]
-    fun bindDetailQuoteRepository(impl: DetailQuoteRepositoryImpl): DetailQuoteRepository
+    fun bindDetailQuoteRepository(impl: com.example.testapplication.data.repository.DetailQuoteRepositoryImpl): com.example.testapplication.domain.repository.DetailQuoteRepository
 
     @[ApplicationScope Binds]
-    fun bindListQuoteRepository(impl: ListQuoteRepositoryImpl): ListQuoteRepository
+    fun bindListQuoteRepository(impl: com.example.testapplication.data.repository.ListQuoteRepositoryImpl): com.example.testapplication.domain.repository.ListQuoteRepository
 
     companion object {
 
@@ -45,7 +45,7 @@ interface DataModule {
 
         @Provides
         fun provideApiService(retrofit: Retrofit) =
-            retrofit.create<ApiService>()
+            retrofit.create<com.example.testapplication.data.network.api.ApiService>()
 
     }
 
