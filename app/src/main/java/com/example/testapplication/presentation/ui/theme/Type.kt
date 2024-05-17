@@ -34,4 +34,10 @@ val Typography = Typography(
         fontSize = 18.sp,
         color = Color.Black
     ),
+    displayMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.roboto_italic)),
+        fontWeight = FontWeight.Medium,
+        fontSize = 26.sp
+    )
+
 )

@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,11 +38,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.testapplication.R
 import com.example.testapplication.domain.entity.Quote
 import com.example.testapplication.presentation.ui.component.Loader
 import com.example.testapplication.presentation.ui.component.SomeWrong
+import com.example.testapplication.presentation.ui.theme.Primary
 import com.example.testapplication.utill.ListColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,11 +62,11 @@ fun DetailQuoteContent(
                     Text(
                         text = stringResource(R.string.quote_with_id, state.quoteId),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = Color.White
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = Primary
                 ),
                 navigationIcon = {
                     IconButton(
@@ -75,7 +75,7 @@ fun DetailQuoteContent(
                         Icon(
                             Icons.Default.ArrowBackIosNew,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = Color.White
                         )
                     }
                 }
@@ -117,74 +117,77 @@ private fun Content(
     tags: List<String>,
     colors: List<String>
 ) {
-    Column(
-        modifier = Modifier.padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = quote.text,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 24.sp,
-                textAlign = TextAlign.Center
-            )
-        }
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = quote.text,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                )
+            }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Text(
-                text = quote.createdAt,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Text(
+                    text = quote.createdAt,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
 
 
-        Spacer(modifier = modifier.height(16.dp))
-        HorizontalDivider(thickness = 2.dp, color = DividerDefaults.color)
+            Spacer(modifier = modifier.height(16.dp))
+            HorizontalDivider(thickness = 2.dp, color = DividerDefaults.color)
 
-        LazyColumn(
-            modifier = Modifier.padding(all = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+            LazyRow(
+                modifier = Modifier.padding(all = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
 
-            items(
-                items = tags
-            ) { item ->
-                Card(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (colors.isEmpty()) {
-                            Color(GRAY)
-                        } else {
-                            val color = colors.random()
-                            ListColor.colors[color] ?: Color(TRANSPARENT)
-                        }
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = stringResource(R.string.tag, item),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                    )
+                items(
+                    items = tags
+                ) { item ->
+                    Card(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        shape = RoundedCornerShape(6.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (colors.isEmpty()) {
+                                Color(GRAY)
+                            } else {
+                                val color = colors.random()
+                                ListColor.colors[color] ?: Color(TRANSPARENT)
+                            }
+                        )
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(6.dp),
+                            text = item,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
                 }
             }
         }
     }
+
+
 }
 
 
