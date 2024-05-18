@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.example.testapplication.domain.entity.Quote
 import com.example.testapplication.domain.usecase.GetAllQuotesUseCase
+import com.example.testapplication.domain.usecase.GetQuoteDetailUseCase
 import com.example.testapplication.presentation.listQuote.ListQuoteStore.Intent
 import com.example.testapplication.presentation.listQuote.ListQuoteStore.Label
 import com.example.testapplication.presentation.listQuote.ListQuoteStore.State
@@ -25,6 +26,7 @@ interface ListQuoteStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoadingMore: Boolean,
+        val quoteDetail: Quote?,
         val listQuoteState: ListQuoteState
     ) {
         sealed interface ListQuoteState {
@@ -40,14 +42,13 @@ interface ListQuoteStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        //действия при которых происходит навигация
-        data class QuoteItemClicked(val quoteId: Int) : Label
     }
 }
 
 class ListQuoteStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val getAllQuotesUseCase: GetAllQuotesUseCase,
+    private val getQuoteDetailUseCase: GetQuoteDetailUseCase
 ) {
 
     private val _listQuotes = mutableListOf<Quote>()
@@ -59,6 +60,7 @@ class ListQuoteStoreFactory @Inject constructor(
             name = "ListQuoteStore",
             initialState = State(
                 isLoadingMore = true,
+                quoteDetail = null,
                 listQuoteState = State.ListQuoteState.Initial
             ),
             bootstrapper = BootstrapperImpl(),
@@ -82,6 +84,8 @@ class ListQuoteStoreFactory @Inject constructor(
         data object LoadingError : Msg
 
         data class LoadingSuccess(val isLoadingMore: Boolean, val quotes: List<Quote>) : Msg
+
+        data class LoadingDetail(val quote: Quote) : Msg
     }
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<Action>() {
@@ -107,7 +111,10 @@ class ListQuoteStoreFactory @Inject constructor(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.QuoteItemClicked -> {
-                    publish(Label.QuoteItemClicked(quoteId = intent.quoteId))
+                    scope.launch {
+                        val quote = getQuoteDetailUseCase(intent.quoteId)
+                        dispatch(Msg.LoadingDetail(quote = quote))
+                    }
                 }
 
                 is Intent.LoadNextBatch -> {
@@ -163,6 +170,12 @@ class ListQuoteStoreFactory @Inject constructor(
             is Msg.StartLoading -> {
                 copy(
                     listQuoteState = State.ListQuoteState.StartLoading
+                )
+            }
+
+            is Msg.LoadingDetail -> {
+                copy(
+                    quoteDetail = msg.quote
                 )
             }
         }

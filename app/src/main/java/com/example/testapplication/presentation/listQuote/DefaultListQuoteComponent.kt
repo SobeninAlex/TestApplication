@@ -19,19 +19,6 @@ class DefaultListQuoteComponent @AssistedInject constructor(
 ) : ListQuoteComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create() }
-    private val scope = componentScope()
-
-    init {
-        scope.launch {
-            store.labels.collect {
-                when (it) {
-                    is ListQuoteStore.Label.QuoteItemClicked -> {
-                        onQuoteItemClicked(it.quoteId)
-                    }
-                }
-            }
-        }
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<ListQuoteStore.State> = store.stateFlow
