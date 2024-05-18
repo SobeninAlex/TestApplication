@@ -38,11 +38,13 @@ interface ListQuoteStore : Store<Intent, State, Label> {
             data object LoadingError : ListQuoteState
 
             data class LoadingSuccess(val quotes: List<Quote>) : ListQuoteState
+
         }
+
     }
 
-    sealed interface Label {
-    }
+    sealed interface Label
+
 }
 
 class ListQuoteStoreFactory @Inject constructor(
@@ -163,7 +165,9 @@ class ListQuoteStoreFactory @Inject constructor(
             is Msg.LoadingSuccess -> {
                 copy(
                     isLoadingMore = msg.isLoadingMore,
-                    listQuoteState = State.ListQuoteState.LoadingSuccess(msg.quotes)
+                    listQuoteState = State.ListQuoteState.LoadingSuccess(
+                        msg.quotes,
+                    )
                 )
             }
 
@@ -175,7 +179,7 @@ class ListQuoteStoreFactory @Inject constructor(
 
             is Msg.LoadingDetail -> {
                 copy(
-                    quoteDetail = msg.quote
+                    quoteDetail = msg.quote,
                 )
             }
         }
