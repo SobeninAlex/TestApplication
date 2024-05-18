@@ -1,10 +1,11 @@
 package com.example.testapplication.presentation.detailQuote
 
 import android.graphics.Color.GRAY
-import android.graphics.Color.TRANSPARENT
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -35,10 +34,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.testapplication.R
 import com.example.testapplication.domain.entity.Quote
 import com.example.testapplication.presentation.ui.component.Loader
 import com.example.testapplication.presentation.ui.component.SomeWrong
@@ -59,11 +56,7 @@ fun DetailQuoteContent(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.quote_with_id, state.quoteId),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
+                    //TODO: надо сделать какой нибудь заголовок, но в голову ничего не пришло
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Primary
@@ -109,6 +102,7 @@ fun DetailQuoteContent(
 
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
@@ -153,40 +147,52 @@ private fun Content(
 
             Spacer(modifier = modifier.height(16.dp))
             HorizontalDivider(thickness = 2.dp, color = DividerDefaults.color)
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(
+                        start = 16.dp, end = 16.dp, top = 16.dp
+                    ),
+                text = "tags",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
-            LazyRow(
-                modifier = Modifier.padding(all = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            FlowRow(
+                modifier = Modifier.padding(16.dp).align(Alignment.Start),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
+                tags.forEach { tag ->
 
-                items(
-                    items = tags
-                ) { item ->
+                    val cardColor = if (colors.isEmpty()) {
+                        Color(GRAY)
+                    } else {
+                        val color = colors.random()
+                        ListColor.colors[color] ?: Color(GRAY)
+                    }
+
+                    val textColor = ListColor.getAlternativeColor(cardColor)
+
                     Card(
                         modifier = Modifier
                             .wrapContentSize(),
                         shape = RoundedCornerShape(6.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (colors.isEmpty()) {
-                                Color(GRAY)
-                            } else {
-                                val color = colors.random()
-                                ListColor.colors[color] ?: Color(TRANSPARENT)
-                            }
+                            containerColor = cardColor
                         )
                     ) {
                         Text(
                             modifier = Modifier.padding(6.dp),
-                            text = item,
+                            text = tag,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground,
+                            color = textColor,
                         )
                     }
                 }
             }
         }
     }
-
 
 }
 

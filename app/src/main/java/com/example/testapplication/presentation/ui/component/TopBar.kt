@@ -20,7 +20,7 @@ fun TopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = stringResource(id = R.string.quotes_list_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White
             )

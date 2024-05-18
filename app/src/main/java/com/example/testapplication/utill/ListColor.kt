@@ -27,4 +27,11 @@ object ListColor {
         "CYAN" to Color(CYAN),
         "MAGENTA" to Color(MAGENTA),
     )
+
+    fun getAlternativeColor(color: Color): Color {
+        return when (color) {
+            Color(WHITE), Color(GREEN), Color(CYAN), Color(YELLOW) -> Color(DKGRAY)
+            else -> Color(WHITE)
+        }
+    }
 }

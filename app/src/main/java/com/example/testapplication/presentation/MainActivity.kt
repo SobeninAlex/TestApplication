@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.arkivanov.decompose.defaultComponentContext
-import com.example.testapplication.CustomTextApp
+import com.example.testapplication.CustomTestApp
 import com.example.testapplication.presentation.root.DefaultRootComponent
 import com.example.testapplication.presentation.root.RootContent
 import com.example.testapplication.presentation.ui.component.SplashScreen
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     lateinit var rootComponentFactory: DefaultRootComponent.Factory
 
     private val appComponent by lazy {
-        (applicationContext as CustomTextApp).applicationComponent
+        (applicationContext as CustomTestApp).applicationComponent
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -181,7 +181,7 @@ private fun QuoteItem(
             ),
             shape = roundedCornerShape,
             elevation = CardDefaults.cardElevation(
-                defaultElevation = 4.dp
+                defaultElevation = 8.dp
             )
         ) {
             Text(
