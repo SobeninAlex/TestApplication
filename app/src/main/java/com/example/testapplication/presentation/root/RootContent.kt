@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.example.testapplication.presentation.detailQuote.DetailQuoteContent
 import com.example.testapplication.presentation.listQuote.ListQuoteContent
 import com.example.testapplication.presentation.ui.theme.TestApplicationTheme
+import java.util.Stack
 
 @Composable
 fun RootContent(
@@ -25,6 +26,7 @@ fun RootContent(
                     is RootComponent.Child.DetailQuote -> {
                         DetailQuoteContent(component = instance.component)
                     }
+
                     is RootComponent.Child.ListQuote -> {
                         ListQuoteContent(component = instance.component)
                     }
