@@ -6,6 +6,8 @@
 - decompose
 - dagger
 - retrofit
+- coroutines
+- flow
 - splash api
 - navigation compose
 
@@ -15,9 +17,11 @@
 
 # ветка master:
 
+<img alt="Screenshot_1.jpg" src=".files%2FScreenshot_1.jpg" width="300"/>
 
-# ветка refactor: 
+# ветка refactor:
 
+<img alt="Screenshot_2.jpg" src=".files%2FScreenshot_2.jpg" width="300"/>
 
 
 
